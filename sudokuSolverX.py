@@ -55,7 +55,8 @@ def solve_sudoku(size, grid):
     for solution in solve(X, Y, []):
         for (r, c, n) in solution:
             grid[r][c] = n
-        yield grid
+        # yield grid
+        return grid
 
 def exact_cover(X, Y):
     X = {j: set() for j in X}
@@ -111,6 +112,7 @@ def showSudoku(grid, x, y):
                 if h != x-1:
                     print("+",end="")
             print("")
+    print("")
 
 
 """ if __name__ == "__main__":
@@ -155,7 +157,6 @@ x = int(sys.argv[2])
 y = int(sys.argv[3])
 output = sys.argv[4]
 
-""" filename = "Sudokus/Easy/Sudoku1" """
 file = open(filename, 'r') 
 Lines = file.readlines()
 grid = []
@@ -167,9 +168,13 @@ for line in Lines:
     grid.append(row)
 # print(grid)
 start_time = time.time()
-for solution in solve_sudoku((x, y), grid):
-    print("%s\n--- %s milliseconds ---\n" % (filename, (time.time() - start_time)*1000))
-    showSudoku(solution, x, y)
+solution = solve_sudoku((x, y), grid)
+final_time = time.time()
 
-with open(output, 'a') as f:
-    print(filename, ",",((time.time() - start_time)*1000), file=f) 
+print("%s\n--- %s milliseconds ---\n" % (filename, (final_time - start_time)*1000))
+showSudoku(solution, x, y)
+
+    
+if(output != "NULL"):
+    with open(output, 'a') as f:
+        print(filename, ",",((final_time - start_time)*1000), file=f) 

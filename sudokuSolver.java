@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class sudokuSolver {
 	int[][] sudoku;
 	boolean[][] holi;
+	int x, y, n;
 	int iter;
 	Scanner reader;
 	boolean solved = false;
@@ -16,7 +17,6 @@ public class sudokuSolver {
 	boolean correct = true;
 
 	public sudokuSolver() {
-
 		iter = 0;
 		reader = new Scanner(System.in);
 	}
@@ -30,8 +30,8 @@ public class sudokuSolver {
 		System.out.println("Loading sudoku from file...");
 		while ((read = b.readLine()) != null) {
 			read = read.replaceAll(" ", "");
-			if (read.length() == 9) {
-				for (j = 0; j < 9; j++) {
+			if (read.length() == n) {
+				for (j = 0; j < n; j++) {
 					sudoku[i][j] = (int) (read.charAt(j) - 48);
 					if (sudoku[i][j] != 0)
 						holi[i][j] = true;
@@ -65,32 +65,28 @@ public class sudokuSolver {
 	}
 
 	private boolean goodCheck(int row, int column) {
-		if (checkRow(row) && checkColumn(column) && checkRegion(row, column))
+		if (checkRow(row, column) && checkColumn(row, column) && checkRegion(row, column))
 			return true;
 		else
 			return false;
 	}
 
-	private boolean checkRow(int row) {
-		if (row >= 0 && row < 9) {
+	private boolean checkRow(int row, int column) {
+		if (row >= 0 && row < n) {
 			for (int ii = 0; ii < sudoku.length; ii++) {
-				for (int jj = ii + 1; jj < sudoku.length; jj++) {
-					if (sudoku[row][ii] == sudoku[row][jj] && sudoku[row][ii] != 0)
-						return false;
-				}
+				if (sudoku[row][column] == sudoku[row][ii])
+					return false;
 			}
 			return true;
 		}
 		return false;
 	}
 
-	private boolean checkColumn(int column) {
-		if (column >= 0 && column < 9) {
+	private boolean checkColumn(int row, int column) {
+		if (column >= 0 && column < n) {
 			for (int ii = 0; ii < sudoku.length; ii++) {
-				for (int jj = ii + 1; jj < sudoku.length; jj++) {
-					if (sudoku[ii][column] == sudoku[jj][column] && sudoku[ii][column] != 0)
-						return false;
-				}
+				if (sudoku[row][column] == sudoku[ii][column])
+					return false;
 			}
 			return true;
 		}
@@ -98,119 +94,41 @@ public class sudokuSolver {
 	}
 
 	private boolean checkRegion(int row, int column) {
-		if (row >= 0 && row < 9 && column >= 0 && column < 9) {
-
-			if (row < 3 && column < 3) {// Region 0
-				for (int ii = 0; ii < 3; ii++) {
-					for (int jj = 0; jj < 3; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row < 3 && column > 2 && column < 6) {// Region 1
-				for (int ii = 0; ii < 3; ii++) {
-					for (int jj = 3; jj < 6; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row < 3 && column > 5) {// Region 2
-				for (int ii = 0; ii < 3; ii++) {
-					for (int jj = 6; jj < 9; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row > 2 && row < 6 && column < 3) {// Region 3
-				for (int ii = 3; ii < 6; ii++) {
-					for (int jj = 0; jj < 3; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row > 2 && row < 6 && column > 2 && column < 6) {// Region 4
-				for (int ii = 3; ii < 6; ii++) {
-					for (int jj = 3; jj < 6; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row > 2 && row < 6 && column > 5) {// Region 5
-				for (int ii = 3; ii < 6; ii++) {
-					for (int jj = 6; jj < 9; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row > 5 && column < 3) {// Region 6
-				for (int ii = 6; ii < 9; ii++) {
-					for (int jj = 0; jj < 3; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row > 5 && column > 2 && column < 6) {// Region 7
-				for (int ii = 6; ii < 9; ii++) {
-					for (int jj = 3; jj < 6; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
-			} else if (row > 5 && column > 5) {// Region 8
-				for (int ii = 6; ii < 9; ii++) {
-					for (int jj = 6; jj < 9; jj++) {
-						if (ii != row || jj != column) {
-							if (sudoku[row][column] == sudoku[ii][jj] && sudoku[row][column] != 0)
-								return false;
-						}
-					}
-				}
+		int row_region = row/x;
+		int column_region = column/y;
+		for(int i = row_region; i < row_region+x; i++){
+			for(int j = column_region; j < column_region+y; j++){
+				if (sudoku[row][column] == sudoku[i][j] && sudoku[row][column] != 0)
+					return false;
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean solve(int row, int column) {
 		// showSudoku();
 		iter++;
 		// System.out.println(iter);
-		for (int ii = 1; ii <= 9; ii++) {
+		for (int ii = 1; ii <= n; ii++) {
 			if (!solved) {
 				if (holi[row][column] == false) {
 					sudoku[row][column] = ii;
 				}
-				if (sudoku[row][column] == 9 && !goodCheck(row, column) && holi[row][column] == false) {
+				if (sudoku[row][column] == n && !goodCheck(row, column) && holi[row][column] == false) {
 					sudoku[row][column] = 0;
 					repeat = true;
 				}
 				if (repeat == true && holi[row][column] == true) {
 				} else if (goodCheck(row, column) && sudoku[row][column] != 0) {
 					repeat = false;
-					if (column < 8) {
+					if (column < n-1) {
 						solve(row, column + 1);
-					} else if (row < 8) {
+					} else if (row < n-1) {
 						solve(row + 1, 0);
 					}
 				}
 			}
-			if (column == 8 && row == 8 && goodCheck(row, column)) {
+			if (column == n-1 && row == n-1 && goodCheck(row, column)) {
 				solved = true;
 				// for (int checkRow=0; checkRow<sudoku.length; checkRow++){
 				// for (int checkCol=0; checkCol<sudoku.length; checkCol++){
@@ -297,6 +215,11 @@ public class sudokuSolver {
 
 	public static void main(String[] args) throws IOException {
 		sudokuSolver sS = new sudokuSolver();
+		sS.x = Integer.parseInt(args[1]);
+		sS.y = Integer.parseInt(args[2]);
+		sS.n = sS.x*sS.y;
+		sS.sudoku = new int[sS.n][sS.n];
+		sS.holi = new boolean[sS.n][sS.n];
 		sS.readSudoku(args[0]);
 		System.out.println("Solving...");
 		if (sS.solve(0, 0))
