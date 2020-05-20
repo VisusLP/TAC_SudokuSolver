@@ -1,29 +1,29 @@
-for a in Sudokus/Beginner/*
+for a in Sudokus/Difficulty/Difficulty/Beginner/*
     do
-        python3 sudokuSolverX.py $a
+        python3 sudokuSolverX.py $a 3 3
     done
     
-for a in Sudokus/Easy/*
+for a in Sudokus/Difficulty/Easy/*
     do
-        python3 sudokuSolverX.py $a
+        python3 sudokuSolverX.py $a 3 3
     done
 
-for a in Sudokus/Medium/*
+for a in Sudokus/Difficulty/Medium/*
     do
-        python3 sudokuSolverX.py $a
+        python3 sudokuSolverX.py $a 3 3
     done
 
-for a in Sudokus/Tricky/*
+for a in Sudokus/Difficulty/Tricky/*
     do
-        python3 sudokuSolverX.py $a
+        python3 sudokuSolverX.py $a 3 3
     done
 
-for a in Sudokus/Fiendish/*
+for a in Sudokus/Difficulty/Fiendish/*
     do
-        python3 sudokuSolverX.py $a
+        python3 sudokuSolverX.py $a 3 3
     done
 
-for a in Sudokus/Diabolical/*
+for a in Sudokus/Difficulty/Diabolical/*
     do
-        python3 sudokuSolverX.py $a
+        python3 sudokuSolverX.py $a 3 3
     done

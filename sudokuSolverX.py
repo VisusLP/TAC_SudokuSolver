@@ -95,15 +95,22 @@ def deselect(X, Y, r, cols):
                 if k != j:
                     X[k].add(i)
 
-def showSudoku(grid):
-    for i in range(0,9):
-        for j in range(0,9):
+def showSudoku(grid, x, y):
+    for i in range(0,x*y):
+        for j in range(0,x*y):
             print(grid[i][j], end = ' ')
-            if(j == 2 or j == 5):
+            if((j+1)%y == 0 and j != (x*y)-1 and j != 0):
                 print("|", end=" ")
         print("")
-        if(i == 2 or i == 5):
-            print("------+-------+------")
+        if((i+1)%x == 0 and i != (x*y)-1 and i != 0):
+            for h in range(x):
+                for _ in range(y*2):
+                    print("-",end="")
+                if h > 0 and h < x-1:
+                    print("-",end="")
+                if h != x-1:
+                    print("+",end="")
+            print("")
 
 
 """ if __name__ == "__main__":
@@ -144,6 +151,10 @@ grid4 = [
      [9,0,0,8,0,7,0,0,0]] """
 
 filename = sys.argv[1]
+x = int(sys.argv[2])
+y = int(sys.argv[3])
+output = sys.argv[4]
+
 """ filename = "Sudokus/Easy/Sudoku1" """
 file = open(filename, 'r') 
 Lines = file.readlines()
@@ -151,14 +162,14 @@ grid = []
 for line in Lines:
     line = line.strip("\n")
     row = line.split(" ")
-    for i in range(0,9):
+    for i in range(0,x*y):
         row[i] = int(row[i])
     grid.append(row)
 # print(grid)
 start_time = time.time()
-for solution in solve_sudoku((3, 3), grid):
+for solution in solve_sudoku((x, y), grid):
     print("%s\n--- %s milliseconds ---\n" % (filename, (time.time() - start_time)*1000))
-    showSudoku(solution)
+    showSudoku(solution, x, y)
 
-with open('results_Knuth.csv', 'a') as f:
+with open(output, 'a') as f:
     print(filename, ",",((time.time() - start_time)*1000), file=f) 
