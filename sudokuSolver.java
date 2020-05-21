@@ -47,20 +47,31 @@ public class sudokuSolver {
 		int i;
 		int j;
 		System.out.println("showing sudoku...");
-		for (j = 0; j < 9; j++) {
-			for (i = 0; i < 9; i++) {
-				System.out.print(sudoku[j][i] + " ");
-				if (i == 2 || i == 5) {
+		for (i = 0; i < n; i++) {
+			for (j = 0; j < n; j++) {
+				System.out.print(sudoku[i][j] + " ");
+				if ((j+1)%y == 0 && j != (x*y)-1 && j != 0) {
 					System.out.print("| ");
 				}
 			}
 			System.out.println();
-			if (j == 2 || j == 5) {
-				System.out.print("------+-------+------");
+			if ((i+1)%x == 0 && i != (x*y)-1 && i != 0) {
+				for(int h = 0; h < x; h++){
+					for(int w = 0; w < (y*2); w++){
+						System.out.print("-");
+					}
+					if( h > 0 && h < x-1){
+						System.out.print("-");
+					}
+					if( h != x-1){
+						System.out.print("+");
+					}
+				}
 				System.out.println();
 			}
 
 		}
+		System.out.println();
 
 	}
 
@@ -72,33 +83,27 @@ public class sudokuSolver {
 	}
 
 	private boolean checkRow(int row, int column) {
-		if (row >= 0 && row < n) {
-			for (int ii = 0; ii < sudoku.length; ii++) {
-				if (sudoku[row][column] == sudoku[row][ii])
-					return false;
-			}
-			return true;
+		for (int ii = 0; ii < n; ii++) {
+			if (sudoku[row][column] == sudoku[row][ii] && column != ii)
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean checkColumn(int row, int column) {
-		if (column >= 0 && column < n) {
-			for (int ii = 0; ii < sudoku.length; ii++) {
-				if (sudoku[row][column] == sudoku[ii][column])
-					return false;
-			}
-			return true;
+		for (int ii = 0; ii < n; ii++) {
+			if (sudoku[row][column] == sudoku[ii][column] && row != ii)
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean checkRegion(int row, int column) {
 		int row_region = row / x;
 		int column_region = column / y;
-		for (int i = row_region; i < row_region + x; i++) {
-			for (int j = column_region; j < column_region + y; j++) {
-				if (sudoku[row][column] == sudoku[i][j] && sudoku[row][column] != 0)
+		for (int i = row_region*x; i < (row_region*x)+x; i++) {
+			for (int j = column_region*y; j < (column_region*y)+y; j++) {
+				if (sudoku[row][column] == sudoku[i][j] && (row != i && column != j))
 					return false;
 			}
 		}
@@ -106,11 +111,11 @@ public class sudokuSolver {
 	}
 
 	private boolean solve(int row, int column) {
-		// showSudoku();
-		iter++;
-		// System.out.println(iter);
+		showSudoku();
 		if (final_value[row][column] == false) {
 			for (int i = 1; i <= n; i++) {
+				iter++;
+				// System.out.println(iter);
 				if (!solved) {
 					sudoku[row][column] = i;
 					if (goodCheck(row, column)) {
@@ -123,6 +128,8 @@ public class sudokuSolver {
 				}
 				if (column == n - 1 && row == n - 1 && goodCheck(row, column)) {
 					solved = true;
+					showSudoku();
+					return true;
 				}
 			}
 			if (!solved && final_value[row][column] == false) {
@@ -135,7 +142,10 @@ public class sudokuSolver {
 				solve(row + 1, 0);
 			}
 		}
-		return true;
+		if(solved){
+			return true;
+		}
+		return false;
 	}
 
 	private void writeFile(int iter, String file) throws FileNotFoundException, IOException {
@@ -144,70 +154,6 @@ public class sudokuSolver {
 
 		writer.close();
 	}
-
-	// boolean goodAttempt = false;
-	// if (final_value[row][column] == true && sudoku[row][column+1]!=0 && column<8
-	// &&
-	// row>0){
-	// sudoku[row][column+1]=0;
-	// if (column == 0){
-	// solve(row-1, 8);
-	// }
-	// else solve (row, column-1);
-	// }
-	// else if (final_value[row][column] == true && sudoku[row+1][0]!=0 && column==8
-	// &&
-	// row>0){
-	// sudoku[row][column+1]=0;
-	// solve (row, column-1);
-	// }
-	// if (final_value[row][column] == false){
-	// while(!goodAttempt){
-	// if(sudoku[row][column]<9){
-	// sudoku[row][column] = sudoku[row][column]+1;
-	// }
-	// if (goodCheck(row, column)){
-	// goodAttempt = true;
-	// }
-	// else if (!goodCheck(row, column) && column>0 && sudoku[row][column]==9){
-	// sudoku[row][column]=0;
-	// solve(row,column-1);
-	// }
-	// else if (!goodCheck(row, column) && column==0 && sudoku[row][column]==9 &&
-	// row>0){
-	// sudoku[row][column]=0;
-	// solve(row-1, 8);
-	// }
-	// }
-	// }
-	//
-	// if (column<8){
-	// solve(row, column+1);
-	// }
-	// else if (row<8){
-	// solve(row+1, 0);
-	// }
-	// else if (column==8 && row==8){
-	// solved = true;
-	// }
-
-	// for (int ii = 0; ii<size; ii++){
-	// if(!solved){
-	// if (column == size-1 && !conflict(ii,column)){
-	// solved = true;
-	// }
-	// if (ii>0){
-	// table[ii-1][column] = false;
-	// }
-	// table[ii][column] = true;
-	// if (conflict(ii, column)){
-	// table[ii][column] = false;
-	// }
-	// else {
-	// solve(column+1);
-	// }
-	// }
-	// }
 
 	public static void main(String[] args) throws IOException {
 		sudokuSolver sS = new sudokuSolver();
@@ -218,11 +164,12 @@ public class sudokuSolver {
 		sS.final_value = new boolean[sS.n][sS.n];
 		sS.readSudoku(args[0]);
 		System.out.println("Solving...");
-		if (sS.solve(0, 0))
+		if (sS.solve(0, 0)){
 			System.out.println("Sudoku solved in " + sS.iter + " steps. End");
+			sS.showSudoku();
+		}
 		else
-			System.out.println("Sudoku was not solved in  " + sS.iter + " steps. End");
-		sS.showSudoku();
+			System.out.println("Sudoku was NOT solved in  " + sS.iter + " steps. End");
 		sS.writeFile(sS.iter, args[0]);
 
 	}
