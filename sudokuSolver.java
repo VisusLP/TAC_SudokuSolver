@@ -79,87 +79,94 @@ public class sudokuSolver {
 
 	}
 
-	private boolean goodCheck(int row, int column) {
-		if (checkRow(row, column) && checkColumn(row, column) && checkRegion(row, column))
-			return true;
+	private boolean goodCheck(int row, int column) { // 7n + 7 + 1
+		if (checkRow(row, column) && checkColumn(row, column) && checkRegion(row, column)) // O(checkRow()) +
+																							// O(checkColumn()) +
+																							// O(checkRegion())
+			return true; // 1
 		else
-			return false;
+			return false; // 1
 	}
 
-	private boolean checkRow(int row, int column) {
-		for (int i = 0; i < n; i++) {
-			if (sudoku[row][column] == sudoku[row][i] && column != i)
-				return false;
+	private boolean checkRow(int row, int column) { // 2n + 1
+		for (int i = 0; i < n; i++) { // n
+			if (sudoku[row][column] == sudoku[row][i] && column != i) // 1 + 1
+				return false; // 1
 		}
-		return true;
+		return true; // 1
 	}
 
-	private boolean checkColumn(int row, int column) {
-		for (int i = 0; i < n; i++) {
-			if (sudoku[row][column] == sudoku[i][column] && row != i)
-				return false;
+	private boolean checkColumn(int row, int column) { // 2n + 1
+		for (int i = 0; i < n; i++) { // n
+			if (sudoku[row][column] == sudoku[i][column] && row != i) // 1 + 1
+				return false; // 1
 		}
-		return true;
+		return true; // 1
 	}
 
-	private boolean checkRegion(int row, int column) {
-		int row_region = row / x;
-		int column_region = column / y;
-		for (int i = row_region * x; i < (row_region * x) + x; i++) {
-			for (int j = column_region * y; j < (column_region * y) + y; j++) {
-				if (sudoku[row][column] == sudoku[i][j] && (row != i && column != j))
-					return false;
+	private boolean checkRegion(int row, int column) { // 3n + 5
+		int row_region = row / x; // 1 + 1
+		int column_region = column / y; // 1 + 1
+		for (int i = row_region * x; i < (row_region * x) + x; i++) { // x
+			for (int j = column_region * y; j < (column_region * y) + y; j++) { // y
+				if (sudoku[row][column] == sudoku[i][j] && (row != i && column != j)) // 1 + (1 + 1)
+					return false; // 1
 			}
 		}
-		return true;
+		return true; // 1
 	}
 
-	private boolean solve(int row, int column) {
+	private boolean solve(int row, int column) { // 14n^2 + 32n + 4 + n*O(solve)
+		// Last cell: 14n^2 + 30n + 1
 		// showSudoku();
-		if (final_value[row][column] == false) {
-			for (int i = 1; i <= n; i++) {
-				iter++;
+		if (final_value[row][column] == false) { // 1
+			for (int i = 1; i <= n; i++) { // n
+				iter++; // 1
 				// System.out.println(iter);
-				if (!solved) {
-					sudoku[row][column] = i;
-					if (goodCheck(row, column)) {
-						if (column < n - 1) {
-							solve(row, column + 1);
-						} else if (row < n - 1) {
-							solve(row + 1, 0);
+				if (!solved) { // 1
+					sudoku[row][column] = i; // 1
+					if (goodCheck(row, column)) { // 1 + O(goodCheck)
+						// Se ejecuta (n - max(row, column)) veces como máximo
+						// Worst case: 6 + O(solve)
+						if (column != n - 1 && row != n - 1) { // 2 + 2
+							if (column < n - 1) { // 1 + 1
+								solve(row, column + 1); // O(solve)
+							} else if (row < n - 1) { // 1 + 1
+								solve(row + 1, 0); // O(solve)
+							}
 						}
 					}
 				}
-				if (column == n - 1 && row == n - 1 && goodCheck(row, column)) {
-					solved = true;
+				if (column == n - 1 && row == n - 1 && goodCheck(row, column)) { // 2 + 2 + O(goodCheck)
+					solved = true; // 1
 					// showSudoku();
-					return true;
+					return true; // 1
 				}
 			}
-			if (!solved && final_value[row][column] == false) {
-				sudoku[row][column] = 0;
+			if (!solved && final_value[row][column] == false) { // 1 + 1
+				sudoku[row][column] = 0; // 1
 			}
 		} else {
-			if (column == n - 1 && row == n - 1 && goodCheck(row, column)) {
-				solved = true;
+			if (column == n - 1 && row == n - 1) { // 1 + 1
+				solved = true; // 1
 				// showSudoku();
-				return true;
+				return true; // 1
 			}
-			if (column < n - 1) {
-				solve(row, column + 1);
-			} else if (row < n - 1) {
-				solve(row + 1, 0);
+			if (column < n - 1) { // 1 + 1
+				solve(row, column + 1); // O(solve)
+			} else if (row < n - 1) { // 1 + 1
+				solve(row + 1, 0); // O(solve)
 			}
 		}
-		if (solved) {
-			return true;
+		if (solved) { // 1
+			return true; // 1
 		}
-		return false;
+		return false; // 1
 	}
 
 	private void writeFile(double iter, String file) throws FileNotFoundException, IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter("results_backtracking_size.csv", true));
-		writer.append(file + "," + numbers_given + "," + iter + "," + (final_time/1000) + "\n");
+		writer.append(file + "," + numbers_given + "," + iter + "," + (final_time / 1000000) + "\n");
 
 		writer.close();
 	}
