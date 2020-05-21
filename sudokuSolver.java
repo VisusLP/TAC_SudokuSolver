@@ -40,30 +40,30 @@ public class sudokuSolver {
 			i++;
 		}
 		b.close();
-		System.out.println("sudoku loaded!!!");
+		// System.out.println("sudoku loaded!!!");
 	}
 
 	private void showSudoku() {
 		int i;
 		int j;
-		System.out.println("showing sudoku...");
+		// System.out.println("showing sudoku...");
 		for (i = 0; i < n; i++) {
 			for (j = 0; j < n; j++) {
 				System.out.print(sudoku[i][j] + " ");
-				if ((j+1)%y == 0 && j != (x*y)-1 && j != 0) {
+				if ((j + 1) % y == 0 && j != (x * y) - 1 && j != 0) {
 					System.out.print("| ");
 				}
 			}
 			System.out.println();
-			if ((i+1)%x == 0 && i != (x*y)-1 && i != 0) {
-				for(int h = 0; h < x; h++){
-					for(int w = 0; w < (y*2); w++){
+			if ((i + 1) % x == 0 && i != (x * y) - 1 && i != 0) {
+				for (int h = 0; h < x; h++) {
+					for (int w = 0; w < (y * 2); w++) {
 						System.out.print("-");
 					}
-					if( h > 0 && h < x-1){
+					if (h > 0 && h < x - 1) {
 						System.out.print("-");
 					}
-					if( h != x-1){
+					if (h != x - 1) {
 						System.out.print("+");
 					}
 				}
@@ -83,16 +83,16 @@ public class sudokuSolver {
 	}
 
 	private boolean checkRow(int row, int column) {
-		for (int ii = 0; ii < n; ii++) {
-			if (sudoku[row][column] == sudoku[row][ii] && column != ii)
+		for (int i = 0; i < n; i++) {
+			if (sudoku[row][column] == sudoku[row][i] && column != i)
 				return false;
 		}
 		return true;
 	}
 
 	private boolean checkColumn(int row, int column) {
-		for (int ii = 0; ii < n; ii++) {
-			if (sudoku[row][column] == sudoku[ii][column] && row != ii)
+		for (int i = 0; i < n; i++) {
+			if (sudoku[row][column] == sudoku[i][column] && row != i)
 				return false;
 		}
 		return true;
@@ -101,8 +101,8 @@ public class sudokuSolver {
 	private boolean checkRegion(int row, int column) {
 		int row_region = row / x;
 		int column_region = column / y;
-		for (int i = row_region*x; i < (row_region*x)+x; i++) {
-			for (int j = column_region*y; j < (column_region*y)+y; j++) {
+		for (int i = row_region * x; i < (row_region * x) + x; i++) {
+			for (int j = column_region * y; j < (column_region * y) + y; j++) {
 				if (sudoku[row][column] == sudoku[i][j] && (row != i && column != j))
 					return false;
 			}
@@ -111,7 +111,7 @@ public class sudokuSolver {
 	}
 
 	private boolean solve(int row, int column) {
-		showSudoku();
+		// showSudoku();
 		if (final_value[row][column] == false) {
 			for (int i = 1; i <= n; i++) {
 				iter++;
@@ -128,7 +128,7 @@ public class sudokuSolver {
 				}
 				if (column == n - 1 && row == n - 1 && goodCheck(row, column)) {
 					solved = true;
-					showSudoku();
+					// showSudoku();
 					return true;
 				}
 			}
@@ -142,7 +142,7 @@ public class sudokuSolver {
 				solve(row + 1, 0);
 			}
 		}
-		if(solved){
+		if (solved) {
 			return true;
 		}
 		return false;
@@ -164,11 +164,10 @@ public class sudokuSolver {
 		sS.final_value = new boolean[sS.n][sS.n];
 		sS.readSudoku(args[0]);
 		System.out.println("Solving...");
-		if (sS.solve(0, 0)){
+		if (sS.solve(0, 0)) {
 			System.out.println("Sudoku solved in " + sS.iter + " steps. End");
 			sS.showSudoku();
-		}
-		else
+		} else
 			System.out.println("Sudoku was NOT solved in  " + sS.iter + " steps. End");
 		sS.writeFile(sS.iter, args[0]);
 
