@@ -9,12 +9,15 @@ import java.util.Scanner;
 public class sudokuSolver {
 	int[][] sudoku;
 	boolean[][] final_value;
+	int numbers_given = 0;
 	int x, y, n;
-	int iter;
+	double iter;
 	Scanner reader;
 	boolean solved = false;
 	boolean repeat = false;
 	boolean correct = true;
+	static double start_time;
+	static double final_time;
 
 	public sudokuSolver() {
 		iter = 0;
@@ -23,18 +26,19 @@ public class sudokuSolver {
 
 	private void readSudoku(String file) throws FileNotFoundException, IOException {
 		String read;
+		String[] buffer;
 		FileReader f = new FileReader(file);
 		int i = 0;
 		int j;
 		BufferedReader b = new BufferedReader(f);
-		System.out.println("Loading sudoku from file "+file+"...");
+		System.out.println("Loading sudoku from file " + file + "...");
 		while ((read = b.readLine()) != null) {
-			read = read.replaceAll(" ", "");
-			if (read.length() == n) {
-				for (j = 0; j < n; j++) {
-					sudoku[i][j] = (int) (read.charAt(j) - 48);
-					if (sudoku[i][j] != 0)
-						final_value[i][j] = true;
+			buffer = read.split(" ");
+			for (j = 0; j < n; j++) {
+				sudoku[i][j] = (Integer.parseInt(buffer[j]));
+				if (sudoku[i][j] != 0) {
+					final_value[i][j] = true;
+					numbers_given++;
 				}
 			}
 			i++;
@@ -153,9 +157,9 @@ public class sudokuSolver {
 		return false;
 	}
 
-	private void writeFile(int iter, String file) throws FileNotFoundException, IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter("results_backtracking.csv", true));
-		writer.append(file + "," + iter + "\n");
+	private void writeFile(double iter, String file) throws FileNotFoundException, IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter("results_backtracking_size.csv", true));
+		writer.append(file + "," + numbers_given + "," + iter + "," + (final_time/1000) + "\n");
 
 		writer.close();
 	}
@@ -169,7 +173,9 @@ public class sudokuSolver {
 		sS.final_value = new boolean[sS.n][sS.n];
 		sS.readSudoku(args[0]);
 		System.out.println("Solving...");
+		start_time = System.nanoTime();
 		if (sS.solve(0, 0)) {
+			final_time = System.nanoTime() - start_time;
 			System.out.println("Sudoku solved in " + sS.iter + " steps. End");
 			sS.showSudoku();
 		} else
