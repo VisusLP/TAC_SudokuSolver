@@ -27,7 +27,7 @@ public class sudokuSolver {
 		int i = 0;
 		int j;
 		BufferedReader b = new BufferedReader(f);
-		System.out.println("Loading sudoku from file...");
+		System.out.println("Loading sudoku from file "+file+"...");
 		while ((read = b.readLine()) != null) {
 			read = read.replaceAll(" ", "");
 			if (read.length() == n) {
@@ -136,6 +136,11 @@ public class sudokuSolver {
 				sudoku[row][column] = 0;
 			}
 		} else {
+			if (column == n - 1 && row == n - 1 && goodCheck(row, column)) {
+				solved = true;
+				// showSudoku();
+				return true;
+			}
 			if (column < n - 1) {
 				solve(row, column + 1);
 			} else if (row < n - 1) {
