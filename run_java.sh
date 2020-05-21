@@ -1,2 +1,2 @@
 javac sudokuSolver.java &&
-java sudokuSolver Sudokus/Size/2x3/Sudoku1_2x3 2 3
+java sudokuSolver Sudokus/Size/2x2/Sudoku2_2x2 2 2
