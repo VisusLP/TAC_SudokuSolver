@@ -116,9 +116,11 @@ public class sudokuSolver {
 		return true; // 1
 	}
 
-	private boolean solve(int row, int column) { // 14n^2 + 32n + 4 + n*O(solve)
+	private boolean solve(int pos) { // 14n^2 + 32n + 4 + n*O(solve)
 		// Last cell: 14n^2 + 30n + 1
 		// showSudoku();
+		int row = pos / n;
+		int column = pos % n;
 		if (final_value[row][column] == false) { // 1
 			for (int i = 1; i <= n; i++) { // n
 				iter++; // 1
@@ -128,16 +130,12 @@ public class sudokuSolver {
 					if (goodCheck(row, column)) { // 1 + O(goodCheck)
 						// Se ejecuta (n - max(row, column)) veces como máximo
 						// Worst case: 6 + O(solve)
-						if (column != n - 1 && row != n - 1) { // 2 + 2
-							if (column < n - 1) { // 1 + 1
-								solve(row, column + 1); // O(solve)
-							} else if (row < n - 1) { // 1 + 1
-								solve(row + 1, 0); // O(solve)
-							}
+						if (pos == (n * n) - 1) { // 2 + 2
+							solve(pos + 1);
 						}
 					}
 				}
-				if (column == n - 1 && row == n - 1 && goodCheck(row, column)) { // 2 + 2 + O(goodCheck)
+				if (pos == (n * n) - 1 && goodCheck(row, column)) { // 2 + 2 + O(goodCheck)
 					solved = true; // 1
 					// showSudoku();
 					return true; // 1
@@ -147,16 +145,12 @@ public class sudokuSolver {
 				sudoku[row][column] = 0; // 1
 			}
 		} else {
-			if (column == n - 1 && row == n - 1) { // 1 + 1
+			if (pos == (n * n) - 1) { // 1 + 1
 				solved = true; // 1
 				// showSudoku();
 				return true; // 1
 			}
-			if (column < n - 1) { // 1 + 1
-				solve(row, column + 1); // O(solve)
-			} else if (row < n - 1) { // 1 + 1
-				solve(row + 1, 0); // O(solve)
-			}
+			solve(pos + 1);
 		}
 		if (solved) { // 1
 			return true; // 1
@@ -181,7 +175,7 @@ public class sudokuSolver {
 		sS.readSudoku(args[0]);
 		System.out.println("Solving...");
 		start_time = System.nanoTime();
-		if (sS.solve(0, 0)) {
+		if (sS.solve(0)) {
 			final_time = System.nanoTime() - start_time;
 			System.out.println("Sudoku solved in " + sS.iter + " steps. End");
 			sS.showSudoku();

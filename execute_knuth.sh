@@ -28,4 +28,4 @@ for a in Sudokus/Difficulty/Fiendish/*
 for a in Sudokus/Difficulty/Diabolical/*
     do
         python3 sudokuSolverX.py $a 3 3 $output
-    done
+    done    
