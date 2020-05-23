@@ -7,6 +7,7 @@
 from itertools import product
 import time
 import sys
+from pathlib import Path
 
 # Al despejar los tiempos constantes, queda esta complejidad:
 # 9 + 10N^2 + 14N^3 + N^3(7 + 32N) + N^2 (10 + 32N + 4N^2 + 8(1 + 4N)(N^2 - r))(N^2 - r)
@@ -70,9 +71,9 @@ def exact_cover(X, Y): # 4N^3 + 4N^2 + 1
     return X, Y # 1
 
 def solve(X, Y, solution):
-    # Se ejecuta N^2 - r + 1 veces, siendo r el número de casillas llenas del sudoku inicial. La última se ejecuta el if, el resto el else
+    # Se ejecuta N^2 - r + 1 veces, siendo r el numero de casillas llenas del sudoku inicial. La última se ejecuta el if, el resto el else
     # (4N^2 + 32N + 10 + 8(1 + 4N)(N^2 - r) - l)*(N^2 - r) + 2
-    # l es la disminución de longitud de X, la cual varía. Por lo que para simplificar, asumimos que siempre se da el peor caso, l = 0.
+    # l es la disminucion de longitud de X, la cual varia. Por lo que para simplificar, asumimos que siempre se da el peor caso, l = 0.
     # (4N^2 + 32N + 10 + 8(4N + 1)(N^2 - r))*(N^2 - r) + 2
     if not X: # 1
         yield list(solution) # 1
@@ -97,11 +98,10 @@ def select(X, Y, r): # 16N + 16Nc + 4c + 2
     return cols # 1
 
 def deselect(X, Y, r, cols):
-    # Siendo r el número de casillas llenas
+    # Siendo r el numero de casillas llenas
     # 4(c + 1)(4N + 1)(N^2 - r)
     # Despejando la c: 8(4N+1)(N^2-r)
-    print("deselecteo")
-    # Se ejecuta como máximo (N^2 - r) * 4. Siendo r el número de casillas llenas en ese momento
+    # Se ejecuta como máximo (N^2 - r) * 4. Siendo r el numero de casillas llenas en ese momento
     for j in reversed(Y[r]): # (N^2 - r) * 4
         X[j] = cols.pop() # 1 + c
         for i in X[j]: # N
@@ -189,7 +189,8 @@ showSudoku(solution, x, y)
 
     
 if(output != "NULL"):
-    exists = f.exists()
+    path = Path(output)
+    exists = path.exists()
     with open(output, 'a') as f:
         if(not exists): print("file, time_ms", file=f)
         print(filename, ",",((final_time - start_time)*1000), file=f) 
