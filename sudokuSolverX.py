@@ -9,7 +9,9 @@ import time
 import sys
 
 # Al despejar los tiempos constantes, queda esta complejidad:
-# 32N^5 + 43N^4 + 52N^3 + 22N^2 + 11
+# 9 + 10N^2 + 14N^3 + N^3(7 + 32N) + N^2 (10 + 32N + 4N^2 + 8(1 + 4N)(N^2 - r))(N^2 - r)
+# Asumiendo el peor caso, un sudoku vacío (r = 0)
+# 32N^7 + 12N^6 + 32N^5 + 42N^4 + 21N^3 + 10N^2 + 9
 def solve_sudoku(size, grid):
     """ An efficient Sudoku solver using Algorithm X.
 
@@ -68,20 +70,21 @@ def exact_cover(X, Y): # 4N^3 + 4N^2 + 1
     return X, Y # 1
 
 def solve(X, Y, solution):
-    # Se ejecuta x + 1 veces, siendo x el número de casillas vacías del sudoku inicial. La última se ejecuta el if, el resto el else
-    # Asumimos el peor caso, un sudoku vacío, en el que se tiene que ejecutar N^2 veces
-    # 16N^3 + 16cN^3 + 6cN^2 + 5N^2 + 2
+    # Se ejecuta N^2 - r + 1 veces, siendo r el número de casillas llenas del sudoku inicial. La última se ejecuta el if, el resto el else
+    # (4N^2 + 32N + 10 + 8(1 + 4N)(N^2 - r) - l)*(N^2 - r) + 2
+    # l es la disminución de longitud de X, la cual varía. Por lo que para simplificar, asumimos que siempre se da el peor caso, l = 0.
+    # (4N^2 + 32N + 10 + 8(4N + 1)(N^2 - r))*(N^2 - r) + 2
     if not X: # 1
         yield list(solution) # 1
     else:
-        c = min(X, key=lambda c: len(X[c])) # 1 + c
+        c = min(X, key=lambda c: len(X[c])) # 1 + ((N^2 * 4) - l) * c      La lista X se va reduciendo poco a poco, por lo que su longitud es N^2*4 - l
         for r in list(X[c]): # 1
             solution.append(r) # c
             cols = select(X, Y, r) # O(Select)
             for s in solve(X, Y, solution): # 1
                 yield s # 1
-            deselect(X, Y, r, cols)
-            solution.pop()
+            deselect(X, Y, r, cols) # O(deselect)
+            solution.pop() # c
 
 def select(X, Y, r): # 16N + 16Nc + 4c + 2
     cols = [] # 1
@@ -94,13 +97,17 @@ def select(X, Y, r): # 16N + 16Nc + 4c + 2
     return cols # 1
 
 def deselect(X, Y, r, cols):
+    # Siendo r el número de casillas llenas
+    # 4(c + 1)(4N + 1)(N^2 - r)
+    # Despejando la c: 8(4N+1)(N^2-r)
     print("deselecteo")
-    for j in reversed(Y[r]):
-        X[j] = cols.pop()
-        for i in X[j]:
-            for k in Y[i]:
-                if k != j:
-                    X[k].add(i)
+    # Se ejecuta como máximo (N^2 - r) * 4. Siendo r el número de casillas llenas en ese momento
+    for j in reversed(Y[r]): # (N^2 - r) * 4
+        X[j] = cols.pop() # 1 + c
+        for i in X[j]: # N
+            for k in Y[i]: # 4
+                if k != j: # 1
+                    X[k].add(i) # c
 
 def showSudoku(grid, x, y):
     for i in range(0,x*y):
@@ -182,5 +189,7 @@ showSudoku(solution, x, y)
 
     
 if(output != "NULL"):
+    exists = f.exists()
     with open(output, 'a') as f:
+        if(not exists): print("file, time_ms", file=f)
         print(filename, ",",((final_time - start_time)*1000), file=f) 

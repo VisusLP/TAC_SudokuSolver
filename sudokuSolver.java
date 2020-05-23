@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -159,7 +160,13 @@ public class sudokuSolver {
 	}
 
 	private void writeFile(double iter, String file) throws FileNotFoundException, IOException {
+		File tmpDir = new File("results_backtracking_size.csv");
+		boolean exists = tmpDir.exists();
 		BufferedWriter writer = new BufferedWriter(new FileWriter("results_backtracking_size.csv", true));
+		if (!exists) {
+			writer.append("file, filled_cells, iterations, time_ms");
+		}
+
 		writer.append(file + "," + numbers_given + "," + iter + "," + (final_time / 1000000) + "\n");
 
 		writer.close();
