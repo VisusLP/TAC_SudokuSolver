@@ -1,4 +1,4 @@
-output="test.csv"
+output="results_knuth_size.csv"
 python3 sudokuSolverX.py "Sudokus/Difficulty/Beginner/Sudoku1" 3 3 "NULL"
 for a in Sudokus/Size/2x2/*
     do

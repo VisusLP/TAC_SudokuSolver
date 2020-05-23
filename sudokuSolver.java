@@ -32,7 +32,7 @@ public class sudokuSolver {
 		int i = 0;
 		int j;
 		BufferedReader b = new BufferedReader(f);
-		System.out.println("Loading sudoku from file " + file + "...");
+		// System.out.println("Loading sudoku from file " + file + "...");
 		while ((read = b.readLine()) != null) {
 			buffer = read.split(" ");
 			for (j = 0; j < n; j++) {
@@ -159,15 +159,15 @@ public class sudokuSolver {
 		return false; // 1
 	}
 
-	private void writeFile(double iter, String file) throws FileNotFoundException, IOException {
-		File tmpDir = new File("results_backtracking_size.csv");
+	private void writeFile(double iter, String file, String output) throws FileNotFoundException, IOException {
+		File tmpDir = new File(output);
 		boolean exists = tmpDir.exists();
-		BufferedWriter writer = new BufferedWriter(new FileWriter("results_backtracking_size.csv", true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
 		if (!exists) {
-			writer.append("file, filled_cells, iterations, time_ms\n");
+			writer.append("file, time_ms\n");
 		}
 
-		writer.append(file + "," + numbers_given + "," + iter + "," + (final_time / 1000000) + "\n");
+		writer.append(file + "," + (final_time / 1000000) + "\n");
 
 		writer.close();
 	}
@@ -180,15 +180,15 @@ public class sudokuSolver {
 		sS.sudoku = new int[sS.n][sS.n];
 		sS.final_value = new boolean[sS.n][sS.n];
 		sS.readSudoku(args[0]);
-		System.out.println("Solving...");
+		// System.out.println("Solving...");
 		start_time = System.nanoTime();
 		if (sS.solve(0)) {
 			final_time = System.nanoTime() - start_time;
-			System.out.println("Sudoku solved in " + sS.iter + " steps. End");
-			sS.showSudoku();
+			// System.out.println("Sudoku solved in " + sS.iter + " steps. End");
+			// sS.showSudoku();
 		} else
-			System.out.println("Sudoku was NOT solved in  " + sS.iter + " steps. End");
-		sS.writeFile(sS.iter, args[0]);
+			// System.out.println("Sudoku was NOT solved in " + sS.iter + " steps. End");
+			sS.writeFile(sS.iter, args[0], args[3]);
 
 	}
 }
