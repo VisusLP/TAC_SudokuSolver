@@ -131,7 +131,7 @@ public class sudokuSolver {
 					if (goodCheck(row, column)) { // 1 + O(goodCheck)
 						// Se ejecuta (n - max(row, column)) veces como máximo
 						// Worst case: 6 + O(solve)
-						if (pos == (n * n) - 1) { // 2 + 2
+						if (pos != (n * n) - 1) { // 2 + 2
 							solve(pos + 1);
 						}
 					}
@@ -164,7 +164,7 @@ public class sudokuSolver {
 		boolean exists = tmpDir.exists();
 		BufferedWriter writer = new BufferedWriter(new FileWriter("results_backtracking_size.csv", true));
 		if (!exists) {
-			writer.append("file, filled_cells, iterations, time_ms");
+			writer.append("file, filled_cells, iterations, time_ms\n");
 		}
 
 		writer.append(file + "," + numbers_given + "," + iter + "," + (final_time / 1000000) + "\n");
