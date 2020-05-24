@@ -5,6 +5,6 @@ for a in py-sudokus/Difficulty/*
 	do
 	for b in $a/*
 		do
-		java sudokuSolver $b 3 3 $output
+		timeout 20s java sudokuSolver $b 3 3 $output
 		done
 	done

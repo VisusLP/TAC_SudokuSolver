@@ -23,6 +23,11 @@ done
 
 for i in {1..100}
 do
+   timeout 20s python3 sudokuGenerator_size.py 2 5 $i
+done
+
+for i in {1..100}
+do
    timeout 20s python3 sudokuGenerator_size.py 3 4 $i
 done
 
@@ -31,22 +36,22 @@ do
    timeout 20s python3 sudokuGenerator_size.py 3 5 $i
 done
 
-for i in {1..100}
+for i in {1..101}
 do
    timeout 20s python3 sudokuGenerator_size.py 3 5 $i
 done
 
-for i in {1..100}
+for i in {1..102}
 do
    timeout 20s python3 sudokuGenerator_size.py 4 4 $i
 done
 
-for i in {1..100}
+for i in {1..118}
 do
    timeout 20s python3 sudokuGenerator_size.py 4 5 $i
 done
 
-for i in {1..100}
+for i in {1..193}
 do
    timeout 20s python3 sudokuGenerator_size.py 5 5 $i
 done

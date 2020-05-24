@@ -52,12 +52,12 @@ def solve_sudoku(size, grid):
             ("rn", (r, n)),
             ("cn", (c, n)),
             ("bn", (b, n))] # 1 + 4
-    X, Y = exact_cover(X, Y) # 1 + O(exact_cover)
+    X, Y = exact_cover(X, Y) # 1 + T(exact_cover)
     for i, row in enumerate(grid): # N^2
         for j, n in enumerate(row): # N
             if n:
-                select(X, Y, (i, j, n)) # O(select())
-    for solution in solve(X, Y, []): # 1 + O(solve)
+                select(X, Y, (i, j, n)) # T(select())
+    for solution in solve(X, Y, []): # 1 + T(solve)
         for (r, c, n) in solution: # N^2
             grid[r][c] = n # 1
         # yield grid
@@ -81,13 +81,14 @@ def solve(X, Y, solution):
         c = min(X, key=lambda c: len(X[c])) # 1 + ((N^2 * 4) - l) * c      La lista X se va reduciendo poco a poco, por lo que su longitud es N^2*4 - l
         for r in list(X[c]): # 1
             solution.append(r) # c
-            cols = select(X, Y, r) # O(Select)
+            cols = select(X, Y, r) # T(Select)
             for s in solve(X, Y, solution): # 1
                 yield s # 1
-            deselect(X, Y, r, cols) # O(deselect)
+            deselect(X, Y, r, cols) # T(deselect)
             solution.pop() # c
 
 def select(X, Y, r): # 16N + 16Nc + 4c + 2
+    # Despejando la c = 1: 256N^2 + 6
     cols = [] # 1
     for j in Y[r]: # 4
         for i in X[j]: # N
@@ -180,11 +181,12 @@ for line in Lines:
         row[i] = int(row[i])
     grid.append(row)
 # print(grid)
-start_time = time.time()
+start_time = time.time_ns()
 solution = solve_sudoku((x, y), grid)
-final_time = time.time()
+final_time = time.time_ns()
+time_difference = ((final_time - start_time)/1000000.0)
 
-print("%s\n--- %s milliseconds ---\n" % (filename, (final_time - start_time)*1000))
+print("%s\n--- %s milliseconds ---\n" % (filename, time_difference))
 showSudoku(solution, x, y)
 
     
@@ -193,4 +195,4 @@ if(output != "NULL"):
     exists = path.exists()
     with open(output, 'a') as f:
         if(not exists): print("file, time_ms", file=f)
-        print(filename, ",",((final_time - start_time)*1000), file=f) 
+        print(filename, ",",time_difference, file=f) 

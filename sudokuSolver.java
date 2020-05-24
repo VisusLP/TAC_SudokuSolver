@@ -81,12 +81,12 @@ public class sudokuSolver {
 	}
 
 	private boolean goodCheck(int row, int column) { // 7n + 7 + 1
-		if (checkRow(row, column) && checkColumn(row, column) && checkRegion(row, column)) // O(checkRow()) +
-																							// O(checkColumn()) +
-																							// O(checkRegion())
+		if (checkRow(row, column) && checkColumn(row, column) && checkRegion(row, column)){ // T(checkRow()) + T(checkColumn()) + T(checkRegion())
 			return true; // 1
-		else
+		}
+		else{
 			return false; // 1
+		}
 	}
 
 	private boolean checkRow(int row, int column) { // 2n + 1
@@ -117,7 +117,7 @@ public class sudokuSolver {
 		return true; // 1
 	}
 
-	private boolean solve(int pos) { // 14n^2 + 32n + 4 + m*O(solve)
+	private boolean solve(int pos) { // 14n^2 + 32n + 4 + m*T(solve)
 		// Last cell: 14n^2 + 30n + 1
 		// showSudoku();
 		int row = pos / n;
@@ -128,15 +128,15 @@ public class sudokuSolver {
 				// System.out.println(iter);
 				if (!solved) { // 1
 					sudoku[row][column] = i; // 1
-					if (goodCheck(row, column)) { // 1 + O(goodCheck)
+					if (goodCheck(row, column)) { // 1 + T(goodCheck)
 						// Se ejecuta (n - max(row, column)) veces como máximo
-						// Worst case: 6 + O(solve)
+						// Worst case: 6 + T(solve)
 						if (pos != (n * n) - 1) { // 2 + 2
 							solve(pos + 1);
 						}
 					}
 				}
-				if (pos == (n * n) - 1 && goodCheck(row, column)) { // 2 + 2 + O(goodCheck)
+				if (pos == (n * n) - 1 && goodCheck(row, column)) { // 2 + 2 + T(goodCheck)
 					solved = true; // 1
 					// showSudoku();
 					return true; // 1
@@ -167,7 +167,7 @@ public class sudokuSolver {
 			writer.append("file, time_ms\n");
 		}
 
-		writer.append(file + "," + (final_time / 1000000) + "\n");
+		writer.append(file + "," + (final_time / (float)1000000) + "\n");
 
 		writer.close();
 	}
@@ -180,15 +180,14 @@ public class sudokuSolver {
 		sS.sudoku = new int[sS.n][sS.n];
 		sS.final_value = new boolean[sS.n][sS.n];
 		sS.readSudoku(args[0]);
-		// System.out.println("Solving...");
+		System.out.println("Solving: "+ args[0]);
 		start_time = System.nanoTime();
-		if (sS.solve(0)) {
-			final_time = System.nanoTime() - start_time;
-			// System.out.println("Sudoku solved in " + sS.iter + " steps. End");
-			// sS.showSudoku();
-		} else
-			// System.out.println("Sudoku was NOT solved in " + sS.iter + " steps. End");
-			sS.writeFile(sS.iter, args[0], args[3]);
+		sS.solve(0);
+		final_time = System.nanoTime() - start_time;
+		System.out.println("Sudoku solved in " + sS.iter + " steps. End");
+		// sS.showSudoku();
+
+		sS.writeFile(sS.iter, args[0], args[3]);
 
 	}
 }
