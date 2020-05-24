@@ -117,7 +117,7 @@ public class sudokuSolver {
 		return true; // 1
 	}
 
-	private boolean solve(int pos) { // 14n^2 + 32n + 4 + n*O(solve)
+	private boolean solve(int pos) { // 14n^2 + 32n + 4 + m*O(solve)
 		// Last cell: 14n^2 + 30n + 1
 		// showSudoku();
 		int row = pos / n;

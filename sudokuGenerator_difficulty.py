@@ -14,7 +14,7 @@ def generateSudoku(d):
     if not os.path.exists(size_folder):
         os.mkdir(size_folder)
     for i in range(1, 101):
-        puzzle = Sudoku(int(x),int(y), seed=i).difficulty(d)
+        puzzle = Sudoku(int(y), int(x), seed=i).difficulty(d)
         puzzle.show()
         filename = 'Sudoku'+str(i)+"_"+str(d)
         final_path = os.path.join(size_folder, filename)
