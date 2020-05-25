@@ -1,6 +1,6 @@
 # SUDOKUS: BACKTRACKING vs KNUTH
 
-# Programas de resolución de Sudokus
+# Programas de Resolución de Sudokus
 
 ## [sudokuSolver.java](sudokuSolver.java)
 
